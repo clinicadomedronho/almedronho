@@ -1,0 +1,88 @@
+{
+  "placeholderImages": [
+    {
+      "id": "hero-bottle-bg",
+      "description": "Al-Medronho bottle featured against a dark, moody background of the distillery.",
+      "imageUrl": "https://picsum.photos/seed/101/1200/800",
+      "imageHint": "distillery bottle"
+    },
+    {
+      "id": "aljezur-landscape",
+      "description": "Sun-drenched landscape of Herdade da Bagagem in Aljezur, with medronho shrubs.",
+      "imageUrl": "https://picsum.photos/seed/102/1000/600",
+      "imageHint": "portugal landscape"
+    },
+    {
+      "id": "al-medronho-bottle",
+      "description": "Clean studio shot of the Al-Medronho bottle.",
+      "imageUrl": "https://picsum.photos/seed/103/400/600",
+      "imageHint": "product bottle"
+    },
+    {
+      "id": "al-medronho-glass",
+      "description": "A glass of Al-Medronho served neat.",
+      "imageUrl": "https://picsum.photos/seed/104/400/400",
+      "imageHint": "spirit glass"
+    },
+    {
+      "id": "reserva-bottle",
+      "description": "Clean studio shot of the Al-Medronho Reserva bottle.",
+      "imageUrl": "https://picsum.photos/seed/105/400/600",
+      "imageHint": "aged bottle"
+    },
+    {
+      "id": "reserva-glass",
+      "description": "A glass of Al-Medronho Reserva served in a tasting glass.",
+      "imageUrl": "https://picsum.photos/seed/106/400/400",
+      "imageHint": "tasting glass"
+    },
+    {
+      "id": "aljezur-sour-cocktail",
+      "description": "An Aljezur Sour cocktail in a coupe glass.",
+      "imageUrl": "https://picsum.photos/seed/107/600/600",
+      "imageHint": "sour cocktail"
+    },
+    {
+      "id": "medronho-tonic-cocktail",
+      "description": "A Medronho & Tonic in a highball glass with garnish.",
+      "imageUrl": "https://picsum.photos/seed/108/600/600",
+      "imageHint": "tonic cocktail"
+    },
+    {
+      "id": "forest-spritz-cocktail",
+      "description": "A Forest Spritz cocktail in a wine glass.",
+      "imageUrl": "https://picsum.photos/seed/109/600/600",
+      "imageHint": "spritz cocktail"
+    },
+    {
+      "id": "default-cocktail",
+      "description": "A generic, beautifully crafted cocktail.",
+      "imageUrl": "https://picsum.photos/seed/110/600/600",
+      "imageHint": "craft cocktail"
+    },
+    {
+      "id": "medronho-fruit-closeup",
+      "description": "Close-up of ripe medronho berries on a branch.",
+      "imageUrl": "https://picsum.photos/seed/111/800/600",
+      "imageHint": "red berries"
+    },
+    {
+      "id": "copper-still",
+      "description": "A traditional copper alembic still in operation.",
+      "imageUrl": "https://picsum.photos/seed/112/800/600",
+      "imageHint": "copper still"
+    },
+    {
+      "id": "fermentation-tanks",
+      "description": "Stainless steel fermentation tanks at the distillery.",
+      "imageUrl": "https://picsum.photos/seed/113/800/600",
+      "imageHint": "distillery tanks"
+    },
+    {
+      "id": "bottling-line",
+      "description": "The bottling and labeling process.",
+      "imageUrl": "https://picsum.photos/seed/114/800/600",
+      "imageHint": "bottling line"
+    }
+  ]
+}
