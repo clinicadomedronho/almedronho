@@ -5,8 +5,6 @@ import Image from 'next/image';
 import Link from 'next/link';
 import Script from 'next/script';
 import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Textarea } from '@/components/ui/textarea';
 import { Instagram, Menu, X } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
@@ -101,67 +99,51 @@ function SectionFixedPattern() {
 }
 
 /* ===============================
-   FORMULÁRIO DE CONTACTO — FORMSPREE
+   FORMULÁRIO DE CONTACTO — FORMSPREE (HTML puro)
    =============================== */
 function ContactForm() {
-  const [status, setStatus] = useState<'idle' | 'sending' | 'ok' | 'error'>('idle');
-  const [error, setError] = useState<string | null>(null);
-
-  const FORMSPREE_ENDPOINT = 'https://formspree.io/f/xvgwnvek'; // <-- teu Form ID
-
-  async function onSubmit(e: React.FormEvent<HTMLFormElement>) {
-    e.preventDefault();
-    setStatus('sending');
-    setError(null);
-
-    const form = e.currentTarget;
-    const formData = new FormData(form);
-
-    // Honeypot anti-spam invisível
-    if (String(formData.get('website') || '')) {
-      setStatus('ok');
-      form.reset();
-      return;
-    }
-
-    try {
-      const res = await fetch(FORMSPREE_ENDPOINT, {
-        method: 'POST',
-        headers: { Accept: 'application/json', 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          name: formData.get('name'),
-          email: formData.get('email'),
-          message: formData.get('message'),
-        }),
-      });
-      const data = await res.json();
-      if (res.ok) {
-        setStatus('ok');
-        form.reset();
-      } else {
-        throw new Error(data?.errors?.[0]?.message || 'Falha no envio');
-      }
-    } catch (err: any) {
-      setStatus('error');
-      setError(err.message || 'Erro ao enviar. Tenta mais tarde.');
-    }
-  }
-
   return (
-    <form onSubmit={onSubmit} className="rounded-xl bg-white shadow-md ring-1 ring-black/5 p-6 space-y-4">
-      {/* Campo invisível (bots preenchem, humanos não) */}
-      <input type="text" name="website" tabIndex={-1} autoComplete="off" className="hidden" />
+    <form
+      action="https://formspree.io/f/xvgwnvek"
+      method="POST"
+      className="rounded-xl bg-white shadow-md ring-1 ring-black/5 p-6 space-y-4"
+    >
+      <label className="block">
+        <span className="text-sm font-medium">O teu nome:</span>
+        <input
+          type="text"
+          name="name"
+          required
+          className="mt-1 w-full rounded-md border border-gray-300 px-3 py-2 shadow-sm focus:border-black focus:ring-black outline-none"
+        />
+      </label>
 
-      <Input type="text" name="name" placeholder="Nome" required />
-      <Input type="email" name="email" placeholder="Email" required />
-      <Textarea name="message" placeholder="Mensagem" className="min-h-[110px]" required />
+      <label className="block">
+        <span className="text-sm font-medium">O teu email:</span>
+        <input
+          type="email"
+          name="email"
+          required
+          className="mt-1 w-full rounded-md border border-gray-300 px-3 py-2 shadow-sm focus:border-black focus:ring-black outline-none"
+        />
+      </label>
 
-      <Button type="submit" className="w-full" disabled={status === 'sending'}>
-        {status === 'sending' ? 'A enviar…' : 'Enviar'}
-      </Button>
+      <label className="block">
+        <span className="text-sm font-medium">Mensagem:</span>
+        <textarea
+          name="message"
+          required
+          rows={5}
+          className="mt-1 w-full rounded-md border border-gray-300 px-3 py-2 shadow-sm focus:border-black focus:ring-black outline-none"
+        />
+      </label>
 
-      {status === 'ok' && <p className="text-green-700 text-sm">Mensagem enviada com sucesso. Obrigado!</p>}
-      {status === 'error' && <p className="text-red-700 text-sm">Não foi possível enviar: {error}</p>}
+      <button
+        type="submit"
+        className="w-full bg-black text-white py-2 px-4 rounded-md hover:bg-gray-800 transition"
+      >
+        Enviar
+      </button>
     </form>
   );
 }
@@ -174,258 +156,258 @@ export default function Home() {
 
   return (
     <div className="bg-background text-foreground font-body overflow-x-hidden">
-    {/* Header */}
-    <header className="fixed top-0 left-0 right-0 z-50 bg-secondary shadow-md h-14">
-      <div className="container mx-auto h-full px-4 flex items-center justify-between">
-        <button onClick={() => setIsMenuOpen(true)}>
-          <Menu className="h-5 w-5 text-gray-700" />
-        </button>
-        <Link href="#inicio" className="ml-auto flex items-center">
+      {/* Header */}
+      <header className="fixed top-0 left-0 right-0 z-50 bg-secondary shadow-md h-14">
+        <div className="container mx-auto h-full px-4 flex items-center justify-between">
+          <button onClick={() => setIsMenuOpen(true)}>
+            <Menu className="h-5 w-5 text-gray-700" />
+          </button>
+          <Link href="#inicio" className="ml-auto flex items-center">
+            <Image src="/clinic logo.png" alt="Clínica do Medronho" width={150} height={48} priority />
+          </Link>
+        </div>
+      </header>
+
+      {/* Menu Mobile */}
+      <div
+        className={cn(
+          'fixed top-0 left-0 h-full w-64 bg-secondary shadow-lg z-[60] transform transition-transform duration-300 ease-in-out',
+          isMenuOpen ? 'translate-x-0' : '-translate-x-full'
+        )}
+      >
+        <div className="flex justify-between items-center p-4 border-b border-primary/20">
           <Image src="/clinic logo.png" alt="Clínica do Medronho" width={150} height={48} priority />
-        </Link>
+          <button onClick={() => setIsMenuOpen(false)}>
+            <X className="h-6 w-6 text-primary" />
+          </button>
+        </div>
+        <nav className="flex flex-col p-4 space-y-4">
+          <Link href="#inicio" onClick={handleMenuLinkClick}>{t.nav.inicio}</Link>
+          <Link href="#historia" onClick={handleMenuLinkClick}>{t.nav.historia}</Link>
+          <Link href="#medronho" onClick={handleMenuLinkClick}>{t.nav.oMedronho}</Link>
+          <Link href="#destilaria" onClick={handleMenuLinkClick}>{t.nav.destilaria}</Link>
+          <Link href="#galeria" onClick={handleMenuLinkClick}>{t.nav.galeria}</Link>
+          <Link href="#contactos" onClick={handleMenuLinkClick}>{t.nav.contactos}</Link>
+        </nav>
       </div>
-    </header>
+      {isMenuOpen && <div onClick={() => setIsMenuOpen(false)} className="fixed inset-0 bg-black/30 z-40" />}
 
-    {/* Menu Mobile */}
-    <div
-      className={cn(
-        'fixed top-0 left-0 h-full w-64 bg-secondary shadow-lg z-[60] transform transition-transform duration-300 ease-in-out',
-        isMenuOpen ? 'translate-x-0' : '-translate-x-full'
-      )}
-    >
-      <div className="flex justify-between items-center p-4 border-b border-primary/20">
-        <Image src="/clinic logo.png" alt="Clínica do Medronho" width={150} height={48} priority />
-        <button onClick={() => setIsMenuOpen(false)}>
-          <X className="h-6 w-6 text-primary" />
-        </button>
-      </div>
-      <nav className="flex flex-col p-4 space-y-4">
-        <Link href="#inicio" onClick={handleMenuLinkClick}>{t.nav.inicio}</Link>
-        <Link href="#historia" onClick={handleMenuLinkClick}>{t.nav.historia}</Link>
-        <Link href="#medronho" onClick={handleMenuLinkClick}>{t.nav.oMedronho}</Link>
-        <Link href="#destilaria" onClick={handleMenuLinkClick}>{t.nav.destilaria}</Link>
-        <Link href="#galeria" onClick={handleMenuLinkClick}>{t.nav.galeria}</Link>
-        <Link href="#contactos" onClick={handleMenuLinkClick}>{t.nav.contactos}</Link>
-      </nav>
-    </div>
-    {isMenuOpen && <div onClick={() => setIsMenuOpen(false)} className="fixed inset-0 bg-black/30 z-40" />}
-
-    {/* HERO */}
-    <section id="inicio" className={`relative ${SECTION_VH} flex items-start`} style={{ backgroundColor: BEIGE }}>
-      <SectionFixedPattern />
-      <div className={CONTENT_WRAPPER}>
-        <div className="mx-auto max-w-4xl flex flex-col items-center text-gray-900 pt-16 md:pt-20">
-          <Image src="/logo medronho castelo.png" alt="selo" width={520} height={220} priority />
-          <div className="flex flex-wrap justify-center gap-x-10 gap-y-3 mt-0">
-            <Button asChild size="lg" variant="default"><Link href="#medronho">{t.hero.button1}</Link></Button>
-            <Button asChild size="lg" variant="secondary"><Link href="#contactos">{t.hero.button2}</Link></Button>
+      {/* HERO */}
+      <section id="inicio" className={`relative ${SECTION_VH} flex items-start`} style={{ backgroundColor: BEIGE }}>
+        <SectionFixedPattern />
+        <div className={CONTENT_WRAPPER}>
+          <div className="mx-auto max-w-4xl flex flex-col items-center text-gray-900 pt-16 md:pt-20">
+            <Image src="/logo medronho castelo.png" alt="selo" width={520} height={220} priority />
+            <div className="flex flex-wrap justify-center gap-x-10 gap-y-3 mt-0">
+              <Button asChild size="lg" variant="default"><Link href="#medronho">{t.hero.button1}</Link></Button>
+              <Button asChild size="lg" variant="secondary"><Link href="#contactos">{t.hero.button2}</Link></Button>
+            </div>
           </div>
         </div>
-      </div>
-    </section>
+      </section>
 
-    {/* História */}
-    <section id="historia" className={`relative ${SECTION_VH} flex items-center`}>
-      <div className={CONTENT_WRAPPER}>
-        <div className="grid md:grid-cols-2 gap-12 items-center">
-          <div>
-            <h2 className="text-4xl font-headline mb-4">{t.history.title}</h2>
-            <p>{t.history.text}</p>
-          </div>
-          <div className={IMAGE_FRAME} style={{ aspectRatio: '4 / 3' }}>
-            <Image
-              src="/a1.jpg"
-              alt="Colheita"
-              fill
-              className="object-cover object-center transition-transform duration-500 ease-out group-hover:scale-105"
-              priority
-            />
-          </div>
-        </div>
-      </div>
-    </section>
-
-    {/* O Medronho */}
-    <section id="medronho" className={`relative ${SECTION_VH} flex items-center`} style={{ backgroundColor: BEIGE }}>
-      <SectionFixedPattern />
-      <div className={CONTENT_WRAPPER}>
-        <div className="grid md:grid-cols-2 gap-12 items-center">
-          <div className="order-last md:order-first">
+      {/* História */}
+      <section id="historia" className={`relative ${SECTION_VH} flex items-center`}>
+        <div className={CONTENT_WRAPPER}>
+          <div className="grid md:grid-cols-2 gap-12 items-center">
+            <div>
+              <h2 className="text-4xl font-headline mb-4">{t.history.title}</h2>
+              <p>{t.history.text}</p>
+            </div>
             <div className={IMAGE_FRAME} style={{ aspectRatio: '4 / 3' }}>
               <Image
-                src="/4.png"
-                alt="Garrafa de Medronho"
+                src="/a1.jpg"
+                alt="Colheita"
                 fill
                 className="object-cover object-center transition-transform duration-500 ease-out group-hover:scale-105"
                 priority
               />
             </div>
           </div>
-          <div>
-            <h2 className="text-4xl font-headline mb-4">{t.medronho.title}</h2>
-            <p>{t.medronho.description}</p>
-          </div>
         </div>
-      </div>
-    </section>
+      </section>
 
-    {/* A Destilaria */}
-    <section id="destilaria" className={`relative ${SECTION_VH} flex items-center`}>
-      <div className={CONTENT_WRAPPER}>
-        <div className="grid md:grid-cols-2 gap-12 items-center">
-          <div>
-            <h2 className="text-4xl font-headline mb-4">{t.distillery.title}</h2>
-            <p>{t.distillery.text}</p>
-          </div>
-          <div className={IMAGE_FRAME} style={{ aspectRatio: '4 / 3' }}>
-            <Image
-              src="/a3.jpg"
-              alt="Alambique"
-              fill
-              className="object-cover object-center transition-transform duration-500 ease-out group-hover:scale-105"
-              priority
-            />
-          </div>
-        </div>
-      </div>
-    </section>
-
-    {/* Galeria */}
-    <section id="galeria" className={`relative ${SECTION_VH} flex items-center`} style={{ backgroundColor: BEIGE }}>
-      <SectionFixedPattern />
-      <div className={CONTENT_WRAPPER}>
-        <div className="text-center pt-6 md:pt-10">
-          <div className="flex items-center justify-center gap-3 mb-6">
-            <h2 className="text-4xl font-headline">{t.gallery.title}</h2>
-            <a href="https://www.instagram.com/" target="_blank" rel="noopener noreferrer" aria-label="Abrir Instagram">
-              <Instagram className="h-7 w-7" />
-            </a>
-          </div>
-
-          {/* Iframe responsivo com o teu SRC */}
-          <div className="w-full relative">
-            <iframe
-              id="embedsocial-feed"
-              src="https://embedsocial.com/api/pro_hashtag/49aa68a88f533fd749123bb88fc55dd3182c16da"
-              className="w-full"
-              style={{ border: 0, height: '600px' }}
-              scrolling="no"
-              loading="lazy"
-              allowTransparency
-            />
-            <div className="absolute inset-0 z-10 cursor-default" style={{ pointerEvents: 'none' }} />
-          </div>
-
-          <Script
-            src="https://embedsocial.com/js/iframe.js"
-            strategy="afterInteractive"
-            onLoad={() => {
-              if (typeof window !== 'undefined' && (window as any).iFrameResize) {
-                (window as any).iFrameResize({}, '#embedsocial-feed');
-              }
-            }}
-          />
-        </div>
-      </div>
-    </section>
-
-    {/* Contactos */}
-    <section id="contactos" className="relative py-16">
-      <div className={CONTENT_WRAPPER}>
-        <h2 className="text-4xl font-headline text-center mb-12">{t.contact.title}</h2>
-
-        <div className="mx-auto max-w-6xl grid md:grid-cols-2 gap-8 items-start">
-          {/* ESQUERDA: formulário + contactos */}
-          <div className="space-y-6">
-            <ContactForm />
-
-            <div className="rounded-xl bg-white shadow-md ring-1 ring-black/5 p-6">
-              <div className="space-y-2 text-gray-900">
-                <p>Email: <a href={`mailto:${t.contact.email}`} className="text-primary hover:underline">{t.contact.email}</a></p>
-                <p>Telefone: <a href={`tel:${t.contact.phone.replace(/\s/g, '')}`} className="text-primary hover:underline">{t.contact.phone}</a></p>
-                <p>Morada: Aljezur, Vales, Herdade da Bagagem</p>
+      {/* O Medronho */}
+      <section id="medronho" className={`relative ${SECTION_VH} flex items-center`} style={{ backgroundColor: BEIGE }}>
+        <SectionFixedPattern />
+        <div className={CONTENT_WRAPPER}>
+          <div className="grid md:grid-cols-2 gap-12 items-center">
+            <div className="order-last md:order-first">
+              <div className={IMAGE_FRAME} style={{ aspectRatio: '4 / 3' }}>
+                <Image
+                  src="/4.png"
+                  alt="Garrafa de Medronho"
+                  fill
+                  className="object-cover object-center transition-transform duration-500 ease-out group-hover:scale-105"
+                  priority
+                />
               </div>
             </div>
+            <div>
+              <h2 className="text-4xl font-headline mb-4">{t.medronho.title}</h2>
+              <p>{t.medronho.description}</p>
+            </div>
           </div>
+        </div>
+      </section>
 
-          {/* DIREITA: mapa */}
-          <div className="flex justify-center items-start">
-            <div className="rounded-xl overflow-hidden shadow-md ring-1 ring-black/5 w-full max-w-[600px] h-[360px] md:h-[450px]">
-              <iframe
-                title="Localização da Destilaria"
-                src="https://www.google.com/maps/embed?pb=!1m14!1m12!1m3!1d2607.684606838381!2d-8.837697827084142!3d37.298597534666456!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!5e1!3m2!1spt-PT!2spt!4v1760693140246!5m2!1spt-PT!2spt"
-                className="w-full h-full block"
-                style={{ border: 0 }}
-                loading="lazy"
+      {/* A Destilaria */}
+      <section id="destilaria" className={`relative ${SECTION_VH} flex items-center`}>
+        <div className={CONTENT_WRAPPER}>
+          <div className="grid md:grid-cols-2 gap-12 items-center">
+            <div>
+              <h2 className="text-4xl font-headline mb-4">{t.distillery.title}</h2>
+              <p>{t.distillery.text}</p>
+            </div>
+            <div className={IMAGE_FRAME} style={{ aspectRatio: '4 / 3' }}>
+              <Image
+                src="/a3.jpg"
+                alt="Alambique"
+                fill
+                className="object-cover object-center transition-transform duration-500 ease-out group-hover:scale-105"
+                priority
               />
             </div>
           </div>
         </div>
-      </div>
-    </section>
+      </section>
 
-    {/* Footer */}
-    <footer className="py-4 bg-secondary text-secondary-foreground">
-      <div className="container mx-auto px-4">
-        <p className="text-center text-sm opacity-90">
-          {t.footer.copyright}
-        </p>
-      </div>
-    </footer>
+      {/* Galeria */}
+      <section id="galeria" className={`relative ${SECTION_VH} flex items-center`} style={{ backgroundColor: BEIGE }}>
+        <SectionFixedPattern />
+        <div className={CONTENT_WRAPPER}>
+          <div className="text-center pt-6 md:pt-10">
+            <div className="flex items-center justify-center gap-3 mb-6">
+              <h2 className="text-4xl font-headline">{t.gallery.title}</h2>
+              <a href="https://www.instagram.com/" target="_blank" rel="noopener noreferrer" aria-label="Abrir Instagram">
+                <Instagram className="h-7 w-7" />
+              </a>
+            </div>
 
-    {/* === Estilos mobile (≤768px) === */}
-    <style jsx global>{`
-      @media (max-width: 768px) {
-        section {
-          padding-top: 3.5rem;
-          padding-bottom: 3.5rem;
+            {/* Iframe responsivo com o teu SRC */}
+            <div className="w-full relative">
+              <iframe
+                id="embedsocial-feed"
+                src="https://embedsocial.com/api/pro_hashtag/49aa68a88f533fd749123bb88fc55dd3182c16da"
+                className="w-full"
+                style={{ border: 0, height: '600px' }}
+                scrolling="no"
+                loading="lazy"
+                allowTransparency
+              />
+              <div className="absolute inset-0 z-10 cursor-default" style={{ pointerEvents: 'none' }} />
+            </div>
+
+            <Script
+              src="https://embedsocial.com/js/iframe.js"
+              strategy="afterInteractive"
+              onLoad={() => {
+                if (typeof window !== 'undefined' && (window as any).iFrameResize) {
+                  (window as any).iFrameResize({}, '#embedsocial-feed');
+                }
+              }}
+            />
+          </div>
+        </div>
+      </section>
+
+      {/* Contactos */}
+      <section id="contactos" className="relative py-16">
+        <div className={CONTENT_WRAPPER}>
+          <h2 className="text-4xl font-headline text-center mb-12">{t.contact.title}</h2>
+
+          <div className="mx-auto max-w-6xl grid md:grid-cols-2 gap-8 items-start">
+            {/* ESQUERDA: formulário + contactos */}
+            <div className="space-y-6">
+              <ContactForm />
+
+              <div className="rounded-xl bg-white shadow-md ring-1 ring-black/5 p-6">
+                <div className="space-y-2 text-gray-900">
+                  <p>Email: <a href={`mailto:${t.contact.email}`} className="text-primary hover:underline">{t.contact.email}</a></p>
+                  <p>Telefone: <a href={`tel:${t.contact.phone.replace(/\s/g, '')}`} className="text-primary hover:underline">{t.contact.phone}</a></p>
+                  <p>Morada: Aljezur, Vales, Herdade da Bagagem</p>
+                </div>
+              </div>
+            </div>
+
+            {/* DIREITA: mapa */}
+            <div className="flex justify-center items-start">
+              <div className="rounded-xl overflow-hidden shadow-md ring-1 ring-black/5 w-full max-w-[600px] h-[360px] md:h-[450px]">
+                <iframe
+                  title="Localização da Destilaria"
+                  src="https://www.google.com/maps/embed?pb=!1m14!1m12!1m3!1d2607.684606838381!2d-8.837697827084142!3d37.298597534666456!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!5e1!3m2!1spt-PT!2spt!4v1760693140246!5m2!1spt-PT!2spt"
+                  className="w-full h-full block"
+                  style={{ border: 0 }}
+                  loading="lazy"
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Footer */}
+      <footer className="py-4 bg-secondary text-secondary-foreground">
+        <div className="container mx-auto px-4">
+          <p className="text-center text-sm opacity-90">
+            {t.footer.copyright}
+          </p>
+        </div>
+      </footer>
+
+      {/* === Estilos mobile (≤768px) === */}
+      <style jsx global>{`
+        @media (max-width: 768px) {
+          section {
+            padding-top: 3.5rem;
+            padding-bottom: 3.5rem;
+          }
+
+          #inicio {
+            min-height: auto !important;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding-top: 6rem;
+            padding-bottom: 6rem;
+          }
+
+          h2 {
+            text-align: center;
+            margin-bottom: 1.25rem;
+          }
+
+          p {
+            text-align: justify;
+            line-height: 1.8;
+          }
+
+          /* “O Medronho” centrado no mobile */
+          #medronho .grid {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            gap: 2rem;
+          }
+
+          #medronho p {
+            max-width: 90%;
+            margin-left: auto;
+            margin-right: auto;
+          }
+
+          /* Galeria: altura menor no mobile para evitar “vazio” */
+          #galeria iframe#embedsocial-feed {
+            height: 420px !important;
+          }
+
+          .container {
+            padding-left: 1.25rem;
+            padding-right: 1.25rem;
+          }
         }
-
-        #inicio {
-          min-height: auto !important;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          padding-top: 6rem;
-          padding-bottom: 6rem;
-        }
-
-        h2 {
-          text-align: center;
-          margin-bottom: 1.25rem;
-        }
-
-        p {
-          text-align: justify;
-          line-height: 1.8;
-        }
-
-        /* “O Medronho” centrado no mobile */
-        #medronho .grid {
-          display: flex;
-          flex-direction: column;
-          align-items: center;
-          text-align: center;
-          gap: 2rem;
-        }
-
-        #medronho p {
-          max-width: 90%;
-          margin-left: auto;
-          margin-right: auto;
-        }
-
-        /* Galeria: altura menor no mobile para evitar “vazio” */
-        #galeria iframe#embedsocial-feed {
-          height: 420px !important;
-        }
-
-        .container {
-          padding-left: 1.25rem;
-          padding-right: 1.25rem;
-        }
-      }
-    `}</style>
+      `}</style>
     </div>
   );
 }
